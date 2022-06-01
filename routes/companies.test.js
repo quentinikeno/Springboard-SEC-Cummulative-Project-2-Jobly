@@ -11,6 +11,7 @@ const {
 	commonAfterEach,
 	commonAfterAll,
 	u1Token,
+	u2Token,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -38,6 +39,19 @@ describe("POST /companies", function () {
 		expect(resp.body).toEqual({
 			company: newCompany,
 		});
+	});
+
+	test("requires authorization", async function () {
+		const resp = await request(app).post("/companies").send(newCompany);
+		expect(resp.statusCode).toEqual(401);
+	});
+
+	test("is forbidden for users who aren't admins", async function () {
+		const resp = await request(app)
+			.post("/companies")
+			.send(newCompany)
+			.set("authorization", `Bearer ${u2Token}`);
+		expect(resp.statusCode).toEqual(403);
 	});
 
 	test("bad request with missing data", async function () {
@@ -266,6 +280,16 @@ describe("PATCH /companies/:handle", function () {
 		});
 	});
 
+	test("is forbidden for non-admin users", async function () {
+		const resp = await request(app)
+			.patch(`/companies/c1`)
+			.send({
+				name: "C1-new",
+			})
+			.set("authorization", `Bearer ${u2Token}`);
+		expect(resp.statusCode).toBe(403);
+	});
+
 	test("unauth for anon", async function () {
 		const resp = await request(app).patch(`/companies/c1`).send({
 			name: "C1-new",
@@ -312,6 +336,13 @@ describe("DELETE /companies/:handle", function () {
 			.delete(`/companies/c1`)
 			.set("authorization", `Bearer ${u1Token}`);
 		expect(resp.body).toEqual({ deleted: "c1" });
+	});
+
+	test("is forbidden for non-admin users", async function () {
+		const resp = await request(app)
+			.delete(`/companies/c1`)
+			.set("authorization", `Bearer ${u2Token}`);
+		expect(resp.statusCode).toEqual(403);
 	});
 
 	test("unauth for anon", async function () {
