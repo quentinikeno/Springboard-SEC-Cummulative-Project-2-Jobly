@@ -95,7 +95,6 @@ class Company {
       FROM companies
       WHERE ${whereConds}
       ORDER BY name`;
-		console.log(sqlQuery, values);
 		const companiesRes = await db.query(sqlQuery, values);
 		return companiesRes.rows;
 	}
