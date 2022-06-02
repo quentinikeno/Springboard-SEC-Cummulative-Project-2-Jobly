@@ -54,8 +54,26 @@ function ensureAdmin(req, res, next) {
 	}
 }
 
+/** Middleware to check if a user is an admin or a permitted user for a route.
+ * If not raises an UnauthorizedError.
+ */
+
+function ensureAdminOrPermittedUser(req, res, next) {
+	try {
+		if (
+			!res.locals.user.isAdmin &&
+			res.locals.user.username !== req.params.username
+		)
+			throw new ForbiddenError();
+		return next();
+	} catch (error) {
+		return next(error);
+	}
+}
+
 module.exports = {
 	authenticateJWT,
 	ensureLoggedIn,
 	ensureAdmin,
+	ensureAdminOrPermittedUser,
 };
