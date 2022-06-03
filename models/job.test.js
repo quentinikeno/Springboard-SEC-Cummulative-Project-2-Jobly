@@ -142,3 +142,27 @@ describe("findAllFiltered", () => {
 		expect(jobs).toEqual(expectedData);
 	});
 });
+
+/************************************** get */
+describe("get", () => {
+	test("Finds a single job based on id", async () => {
+		const job = await Job.get(jobIds[0]);
+		const expectedData = {
+			id: expect.any(Number),
+			title: "job1",
+			salary: 50000,
+			equity: "1",
+			companyHandle: "c1",
+		};
+		expect(job).toEqual(expectedData);
+	});
+
+	test("Throws an error if job not found", async () => {
+		try {
+			await Job.get(0);
+			fail();
+		} catch (error) {
+			expect(error instanceof NotFoundError).toBeTruthy();
+		}
+	});
+});
