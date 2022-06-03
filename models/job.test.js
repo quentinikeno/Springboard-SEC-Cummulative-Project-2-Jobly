@@ -144,6 +144,7 @@ describe("findAllFiltered", () => {
 });
 
 /************************************** get */
+
 describe("get", () => {
 	test("Finds a single job based on id", async () => {
 		const job = await Job.get(jobIds[0]);
@@ -160,6 +161,39 @@ describe("get", () => {
 	test("Throws an error if job not found", async () => {
 		try {
 			await Job.get(0);
+			fail();
+		} catch (error) {
+			expect(error instanceof NotFoundError).toBeTruthy();
+		}
+	});
+});
+
+/************************************** update */
+
+describe("update", () => {
+	test("Updates a single job based on id", async () => {
+		const job = await Job.update(jobIds[0], {
+			title: "updated job",
+			salary: 10,
+			equity: "0",
+		});
+		const expectedData = {
+			id: expect.any(Number),
+			title: "updated job",
+			salary: 10,
+			equity: "0",
+			companyHandle: "c1",
+		};
+		expect(job).toEqual(expectedData);
+	});
+
+	test("Throws an error if job not found", async () => {
+		try {
+			await Job.update(0, {
+				title: "updated job",
+				salary: 10,
+				equity: "0",
+			});
 			fail();
 		} catch (error) {
 			expect(error instanceof NotFoundError).toBeTruthy();
