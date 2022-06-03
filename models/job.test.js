@@ -200,3 +200,24 @@ describe("update", () => {
 		}
 	});
 });
+
+/************************************** remove */
+
+describe("remove", () => {
+	test("Removes a single job based on id", async () => {
+		await Job.remove(jobIds[0]);
+		const job = await db.query(`SELECT id FROM jobs WHERE id=$1`, [
+			jobIds[0],
+		]);
+		expect(job.rows.length).toBe(0);
+	});
+
+	test("Throws an error if job not found", async () => {
+		try {
+			await Job.remove(0);
+			fail();
+		} catch (error) {
+			expect(error instanceof NotFoundError).toBeTruthy();
+		}
+	});
+});
