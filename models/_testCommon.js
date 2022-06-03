@@ -41,7 +41,8 @@ async function commonBeforeAll() {
     (title, salary, equity, company_handle)
     VALUES ('job1', 50000, 1, 'c1'),
 	('job2', 60000, 0, 'c2'),
-	('job3', 40000, 0.5, 'c3')
+	('job3', 40000, 0.5, 'c3'),
+	('j4', 10000, 0, 'c3')
 	RETURNING id, title, salary, equity, company_handle AS "companyHandle"
   `);
 
