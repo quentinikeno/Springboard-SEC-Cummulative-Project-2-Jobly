@@ -49,26 +49,27 @@ class Job {
 	 * Returns [{ id, title, salary, equity, company_handle }, ...]
 	 * */
 
-	static async findAllFiltered(filters) {
-		if (filters.title) {
-			filters.title = `%${filters.title}%`;
+	static async findAllFiltered({ title, minSalary, hasEquity }) {
+		if (title) {
+			title = `%${title}%`;
 		}
 
-		const keys = Object.keys(filters);
-		const conds = keys.map((condName, idx) => {
-			if (condName === "title") {
-				return `title ILIKE $${idx + 1}`;
-			} else if (condName === "minSalary") {
-				return `salary >= $${idx + 1}`;
-			} else if (condName === "hasEquity") {
-				if (filters.hasEquity) {
-					return "equity > 0";
-				}
-			}
-		});
+		const conds = [];
+		const values = [];
+
+		if (title) {
+			values.push(`%${title}%`);
+			conds.push(`title ILIKE $${values.length}`);
+		}
+		if (minSalary) {
+			values.push(minSalary);
+			conds.push(`salary >= $${values.length}`);
+		}
+		if (hasEquity) {
+			conds.push("equity > 0");
+		}
 
 		const whereConds = conds.join(" AND ");
-		const values = Object.values(filters);
 		const sqlQuery = `
       SELECT id, title, salary, equity, company_handle AS "companyHandle"
       FROM jobs
