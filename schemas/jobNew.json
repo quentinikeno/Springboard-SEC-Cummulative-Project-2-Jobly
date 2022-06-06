@@ -1,0 +1,44 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema",
+	"$id": "http://example.com/example.json",
+	"title": "Root Schema",
+	"type": "object",
+	"default": {},
+	"required": ["title", "company_handle"],
+	"additionalProperties": false,
+	"properties": {
+		"title": {
+			"title": "The title Schema",
+			"type": "string",
+			"default": "",
+			"examples": ["Music Teacher"]
+		},
+		"salary": {
+			"title": "The salary Schema",
+			"type": "integer",
+			"default": 0,
+			"minimum": 0,
+			"examples": [500000]
+		},
+		"equity": {
+			"title": "The equity Schema",
+			"type": "string",
+			"default": "",
+			"examples": ["0"]
+		},
+		"company_handle": {
+			"title": "The company_handle Schema",
+			"type": "string",
+			"default": "",
+			"examples": ["dept-edu"]
+		}
+	},
+	"examples": [
+		{
+			"title": "Music Teacher",
+			"salary": 500000,
+			"equity": "0",
+			"company_handle": "dept-edu"
+		}
+	]
+}
