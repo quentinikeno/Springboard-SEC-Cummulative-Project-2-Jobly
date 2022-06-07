@@ -56,6 +56,9 @@ router.get("/", async function (req, res, next) {
 		if (query.minSalary) {
 			query.minSalary = +query.minSalary;
 		}
+		if (query.hasEquity) {
+			query.hasEquity = query.hasEquity === "true" ? true : false;
+		}
 
 		if (Object.keys(query).length > 0) {
 			const validator = jsonschema.validate(query, jobFilterSchema);
