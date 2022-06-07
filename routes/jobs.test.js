@@ -206,6 +206,7 @@ describe("PATCH /jobs/:id", () => {
 
 		expect(resp.statusCode).toBe(401);
 	});
+
 	test("should not update if data is invalid", async () => {
 		const resp = await request(app)
 			.patch(`/jobs/${testJobs[0].id}`)
@@ -213,5 +214,39 @@ describe("PATCH /jobs/:id", () => {
 			.set("authorization", `Bearer ${u1Token}`);
 
 		expect(resp.statusCode).toBe(400);
+	});
+
+	test("should have 404 status code if job not found", async () => {
+		const resp = await request(app)
+			.patch(`/jobs/0`)
+			.send(update)
+			.set("authorization", `Bearer ${u1Token}`);
+
+		expect(resp.statusCode).toBe(404);
+	});
+});
+/************************************** DELETE /jobs/:id */
+
+describe("DELETE /jobs/:id", () => {
+	test("should delete jobs if admin", async () => {
+		const resp = await request(app)
+			.delete(`/jobs/${testJobs[0].id}`)
+			.set("authorization", `Bearer ${u1Token}`);
+		expect(resp.statusCode).toBe(200);
+		expect(resp.body).toEqual({ deleted: expect.any(Number) });
+	});
+
+	test("should not delete if not admin", async () => {
+		const resp = await request(app).delete(`/jobs/${testJobs[0].id}`);
+
+		expect(resp.statusCode).toBe(401);
+	});
+
+	test("should have 404 status code if job not found", async () => {
+		const resp = await request(app)
+			.delete(`/jobs/0`)
+			.set("authorization", `Bearer ${u1Token}`);
+
+		expect(resp.statusCode).toBe(404);
 	});
 });
