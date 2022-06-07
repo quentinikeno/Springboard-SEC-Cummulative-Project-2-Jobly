@@ -132,4 +132,24 @@ router.delete(
 	}
 );
 
+/** DELETE /[username]/jobs/[jobId]  =>  { applied: jobId }
+ *
+ * Authorization required: login
+ **/
+
+router.post(
+	"/:username/jobs/:id",
+	ensureLoggedIn,
+	ensureAdminOrPermittedUser,
+	async function (req, res, next) {
+		try {
+			const { username, id } = req.params;
+			const jobId = await User.applyJob(username, id);
+			return res.status(201).json({ applied: jobId });
+		} catch (err) {
+			return next(err);
+		}
+	}
+);
+
 module.exports = router;
