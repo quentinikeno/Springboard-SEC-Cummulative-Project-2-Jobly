@@ -179,3 +179,39 @@ describe("GET /jobs/:id", () => {
 		expect(resp.statusCode).toBe(404);
 	});
 });
+
+/************************************** PATCH /jobs/:id */
+
+describe("PATCH /jobs/:id", () => {
+	const update = { title: "Updated Job", salary: 0, equity: "1" };
+	test("should update jobs if admin", async () => {
+		const resp = await request(app)
+			.patch(`/jobs/${testJobs[0].id}`)
+			.send(update)
+			.set("authorization", `Bearer ${u1Token}`);
+		expect(resp.statusCode).toBe(200);
+		expect(resp.body).toEqual({
+			job: {
+				id: expect.any(Number),
+				companyHandle: "c1",
+				...update,
+			},
+		});
+	});
+
+	test("should not update if not admin", async () => {
+		const resp = await request(app)
+			.patch(`/jobs/${testJobs[0].id}`)
+			.send(update);
+
+		expect(resp.statusCode).toBe(401);
+	});
+	test("should not update if data is invalid", async () => {
+		const resp = await request(app)
+			.patch(`/jobs/${testJobs[0].id}`)
+			.send({ bad: "data" })
+			.set("authorization", `Bearer ${u1Token}`);
+
+		expect(resp.statusCode).toBe(400);
+	});
+});
