@@ -2,7 +2,6 @@
 
 const request = require("supertest");
 
-const db = require("../db");
 const app = require("../app");
 
 const {
@@ -11,7 +10,7 @@ const {
 	commonAfterEach,
 	commonAfterAll,
 	u1Token,
-	u2Token,
+	testJobs,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -130,6 +129,7 @@ describe("GET /jobs", () => {
 			],
 		});
 	});
+
 	test("Works with hasEquity filter", async () => {
 		const resp = await request(app).get("/jobs").query({ hasEquity: true });
 		expect(resp.statusCode).toBe(200);
@@ -162,5 +162,20 @@ describe("GET /jobs", () => {
 				},
 			],
 		});
+	});
+});
+
+/************************************** GET /jobs/:id */
+
+describe("GET /jobs/:id", () => {
+	test("should return info on a single job", async () => {
+		const resp = await request(app).get(`/jobs/${testJobs[0].id}`);
+		expect(resp.statusCode).toBe(200);
+		expect(resp.body).toEqual({ job: testJobs[0] });
+	});
+
+	test("should have 404 status code if job does not exist", async () => {
+		const resp = await request(app).get(`/jobs/0`);
+		expect(resp.statusCode).toBe(404);
 	});
 });
