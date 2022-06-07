@@ -4,7 +4,7 @@
 	"title": "Root Schema",
 	"type": "object",
 	"default": {},
-	"required": ["title", "company_handle"],
+	"required": ["title", "companyHandle"],
 	"additionalProperties": false,
 	"properties": {
 		"title": {
@@ -26,8 +26,8 @@
 			"default": "",
 			"examples": ["0"]
 		},
-		"company_handle": {
-			"title": "The company_handle Schema",
+		"companyHandle": {
+			"title": "The companyHandle Schema",
 			"type": "string",
 			"default": "",
 			"examples": ["dept-edu"]
