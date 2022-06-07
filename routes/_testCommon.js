@@ -8,6 +8,8 @@ const { createToken } = require("../helpers/tokens");
 const testJobs = [];
 
 async function commonBeforeAll() {
+	await db.query("DELETE FROM applications");
+	await db.query("DELETE FROM jobs");
 	// noinspection SqlWithoutWhere
 	await db.query("DELETE FROM users");
 	// noinspection SqlWithoutWhere
@@ -77,6 +79,7 @@ async function commonBeforeAll() {
 		equity: "0",
 		companyHandle: "c3",
 	});
+	await User.applyJob("u1", job1.id);
 
 	testJobs.splice(0, 0, job1);
 }

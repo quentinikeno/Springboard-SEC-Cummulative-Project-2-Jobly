@@ -7,12 +7,13 @@ const testJobs = [];
 let jobIds = [];
 
 async function commonBeforeAll() {
+	await db.query("DELETE FROM applications");
+
+	await db.query("DELETE FROM jobs");
 	// noinspection SqlWithoutWhere
 	await db.query("DELETE FROM companies");
 	// noinspection SqlWithoutWhere
 	await db.query("DELETE FROM users");
-
-	await db.query("DELETE FROM jobs");
 
 	await db.query(`
     INSERT INTO companies(handle, name, num_employees, description, logo_url)
@@ -48,6 +49,15 @@ async function commonBeforeAll() {
 
 	testJobs.splice(0, 0, ...jobRes.rows);
 	jobIds.splice(0, 0, ...testJobs.map((job) => job.id));
+
+	await db.query(
+		`
+	INSERT INTO applications
+	(username, job_id)
+	VALUES ('u1', $1)
+	`,
+		[jobIds[0]]
+	);
 }
 
 async function commonBeforeEach() {
